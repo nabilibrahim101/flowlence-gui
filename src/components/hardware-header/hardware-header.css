@@ -87,3 +87,28 @@
 .stage-button-toggled-off {
     filter: saturate(0);
 }
+
+/* RTL Support */
+[dir="rtl"] .hardware-header-wrapper {
+    right: auto;
+    left: $space;
+}
+
+[dir="rtl"] .stage-size-toggle-group {
+    margin-left: .2rem;
+    margin-right: auto;
+}
+
+[dir="rtl"] .upload-icon {
+    margin-right: 0;
+    margin-left: 0.35rem;
+}
+
+[dir="rtl"] .stage-button-last {
+    border-left: 1px solid $ui-black-transparent;
+    border-right: none;
+    border-top-left-radius: $form-radius;
+    border-bottom-left-radius: $form-radius;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}

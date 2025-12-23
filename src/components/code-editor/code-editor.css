@@ -1,6 +1,13 @@
 @import "../../css/units.css";
 @import "../../css/colors.css";
 
+/* Force code editor to stay LTR even in RTL mode */
+.code-editor {
+    direction: ltr !important;
+    text-align: left !important;
+}
+
 .code-editor * {
     box-sizing: border-box;
+    direction: ltr !important;
 }
