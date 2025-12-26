@@ -4,6 +4,7 @@
   "description": "GraphicaL User Interface for creating and running OpenBlock projects",
   "main": "./main/scratch-gui.js",
   "scripts": {
+    "postinstall": "patch-package",
     "build": "npm run clean && webpack --colors --bail",
     "clean": "rimraf ./build && mkdirp build",
     "deploy": "touch build/.nojekyll && gh-pages -t -d build -m \"Build for $(git log --pretty=format:%H -n1) [skip ci]\"",
@@ -127,6 +128,7 @@
     "jest-junit": "7.0.0",
     "mkdirp": "1.0.3",
     "monaco-editor-webpack-plugin": "^1.7.0",
+    "patch-package": "^8.0.1",
     "raf": "3.4.1",
     "react-test-renderer": "16.2.0",
     "redux-mock-store": "1.5.3",
