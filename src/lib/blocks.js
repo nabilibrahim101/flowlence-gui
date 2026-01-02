@@ -353,5 +353,85 @@ export default function (vm) {
         return true;
     };
 
+    // ============================================================
+    // Flowlence Typed Variable Blocks
+    // ============================================================
+
+    // Block to declare a typed variable (Number or Text)
+    ScratchBlocks.Blocks.data_typedvariable_declare = {
+        init: function () {
+            this.jsonInit({
+                message0: 'Declare %1 variable %2 = %3',
+                args0: [
+                    {
+                        type: 'field_dropdown',
+                        name: 'TYPE',
+                        options: [
+                            ['Number', 'NUMBER'],
+                            ['Text', 'TEXT']
+                        ]
+                    },
+                    {
+                        type: 'field_input',
+                        name: 'VAR',
+                        text: 'myVar'
+                    },
+                    {
+                        type: 'input_value',
+                        name: 'VALUE'
+                    }
+                ],
+                colour: '#FF8C1A',
+                colourSecondary: '#DB6E00',
+                colourTertiary: '#CF8B17',
+                extensions: ['shape_statement']
+            });
+        }
+    };
+
+    // Block to get a typed variable value (reporter)
+    ScratchBlocks.Blocks.data_typedvariable_get = {
+        init: function () {
+            this.jsonInit({
+                message0: 'typed var %1',
+                args0: [
+                    {
+                        type: 'field_input',
+                        name: 'VAR',
+                        text: 'myVar'
+                    }
+                ],
+                colour: '#FF8C1A',
+                colourSecondary: '#DB6E00',
+                colourTertiary: '#CF8B17',
+                extensions: ['output_string']
+            });
+        }
+    };
+
+    // Block to set a typed variable value
+    ScratchBlocks.Blocks.data_typedvariable_set = {
+        init: function () {
+            this.jsonInit({
+                message0: 'Set typed %1 to %2',
+                args0: [
+                    {
+                        type: 'field_input',
+                        name: 'VAR',
+                        text: 'myVar'
+                    },
+                    {
+                        type: 'input_value',
+                        name: 'VALUE'
+                    }
+                ],
+                colour: '#FF8C1A',
+                colourSecondary: '#DB6E00',
+                colourTertiary: '#CF8B17',
+                extensions: ['shape_statement']
+            });
+        }
+    };
+
     return ScratchBlocks;
 }

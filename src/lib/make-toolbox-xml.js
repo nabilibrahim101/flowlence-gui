@@ -707,6 +707,32 @@ const variables = function () {
     `;
 };
 
+const variableType = function () {
+    return `
+    <category
+        name="Variable Type"
+        id="variableType"
+        colour="#FF8C1A"
+        secondaryColour="#DB6E00">
+        <block type="data_typedvariable_declare">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+        <block type="data_typedvariable_get"></block>
+        <block type="data_typedvariable_set">
+            <value name="VALUE">
+                <shadow type="math_number">
+                    <field name="NUM">0</field>
+                </shadow>
+            </value>
+        </block>
+    </category>
+    `;
+};
+
 const myBlocks = function () {
     return `
     <category
@@ -771,6 +797,7 @@ const makeToolboxXML = function (isInitialSetup, device = null, isStage = true, 
     const sensingXML = moveCategory('sensing') || sensing(isInitialSetup, isStage, targetId);
     const operatorsXML = moveCategory('operators') || operators(isInitialSetup, isStage, targetId);
     const variablesXML = moveCategory('data') || variables(isInitialSetup, isStage, targetId);
+    const variableTypeXML = moveCategory('variableType') || variableType();
     const myBlocksXML = moveCategory('procedures') || myBlocks(isInitialSetup, isStage, targetId);
 
     if (device && !isRealtimeMode) {
@@ -786,6 +813,7 @@ const makeToolboxXML = function (isInitialSetup, device = null, isStage = true, 
             controlXML, gap,
             operatorsXML, gap,
             variablesXML, gap,
+            variableTypeXML, gap,
             myBlocksXML
         );
     } else {
@@ -799,6 +827,7 @@ const makeToolboxXML = function (isInitialSetup, device = null, isStage = true, 
             sensingXML, gap,
             operatorsXML, gap,
             variablesXML, gap,
+            variableTypeXML, gap,
             myBlocksXML
         );
     }

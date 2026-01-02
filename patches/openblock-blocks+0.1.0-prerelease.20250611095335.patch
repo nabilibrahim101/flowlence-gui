@@ -1,3 +1,109 @@
+diff --git a/node_modules/openblock-blocks/arduino_compressed.js b/node_modules/openblock-blocks/arduino_compressed.js
+index f54decd..79ca58f 100644
+--- a/node_modules/openblock-blocks/arduino_compressed.js
++++ b/node_modules/openblock-blocks/arduino_compressed.js
+@@ -72,3 +72,7 @@ Blockly.Arduino.data_replaceitemoflist=function(a){var b=Blockly.Arduino.valueTo
+ Blockly.Arduino.data_itemoflist=function(a){var b=Blockly.Arduino.valueToCode(a,"INDEX",Blockly.Arduino.ORDER_ADDITIVE)||"0";return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".get("+b+" - 1)",Blockly.Arduino.ORDER_ATOMIC]};
+ Blockly.Arduino.data_itemnumoflist=function(a){var b=Blockly.Arduino.valueToCode(a,"ITEM",Blockly.Arduino.ORDER_ADDITIVE)||"0";return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".search("+b+") + 1",Blockly.Arduino.ORDER_UNARY_SIGN]};Blockly.Arduino.data_lengthoflist=function(a){return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".size()",Blockly.Arduino.ORDER_ATOMIC]};
+ Blockly.Arduino.data_listcontainsitem=function(a){var b=Blockly.Arduino.valueToCode(a,"ITEM",Blockly.Arduino.ORDER_ADDITIVE)||"0";return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".has("+b+") != -1",Blockly.Arduino.ORDER_UNARY_SIGN]};Blockly.Arduino.data_showlist=function(){return""};Blockly.Arduino.data_hidelist=function(){return""};
++// Flowlence Typed Variable Generators
++Blockly.Arduino.data_typedvariable_declare=function(a){var b=a.getFieldValue("TYPE"),c=a.getFieldValue("VAR"),d=Blockly.Arduino.valueToCode(a,"VALUE",Blockly.Arduino.ORDER_ASSIGNMENT)||("TEXT"===b?'""':"0");c=c.replace(/[^a-zA-Z0-9_]/g,"_");var e="TEXT"===b?"String":"float";Blockly.Arduino.definitions_["typedvar_"+c]=e+" "+c+";";return c+" = "+d+";\n"};
++Blockly.Arduino.data_typedvariable_get=function(a){var b=a.getFieldValue("VAR");b=b.replace(/[^a-zA-Z0-9_]/g,"_");return[b,Blockly.Arduino.ORDER_ATOMIC]};
++Blockly.Arduino.data_typedvariable_set=function(a){var b=a.getFieldValue("VAR"),c=Blockly.Arduino.valueToCode(a,"VALUE",Blockly.Arduino.ORDER_ASSIGNMENT)||"0";b=b.replace(/[^a-zA-Z0-9_]/g,"_");return b+" = "+c+";\n"};
+diff --git a/node_modules/openblock-blocks/blocks_vertical/data.js b/node_modules/openblock-blocks/blocks_vertical/data.js
+index a2e1df0..ffa2254 100644
+--- a/node_modules/openblock-blocks/blocks_vertical/data.js
++++ b/node_modules/openblock-blocks/blocks_vertical/data.js
+@@ -668,3 +668,89 @@ Blockly.Constants.Data.DELETE_OPTION_CALLBACK_FACTORY = function(block,
+     workspace.deleteVariableById(variable.getId());
+   };
+ };
++
++// ============================================================
++// Flowlence Typed Variable Blocks
++// ============================================================
++
++/**
++ * Block to declare a typed variable (Number or Text)
++ */
++Blockly.Blocks['data_typedvariable_declare'] = {
++  init: function() {
++    this.jsonInit({
++      "message0": "Declare %1 variable %2 = %3",
++      "args0": [
++        {
++          "type": "field_dropdown",
++          "name": "TYPE",
++          "options": [
++            ["Number", "NUMBER"],
++            ["Text", "TEXT"]
++          ]
++        },
++        {
++          "type": "field_input",
++          "name": "VAR",
++          "text": "myVar"
++        },
++        {
++          "type": "input_value",
++          "name": "VALUE"
++        }
++      ],
++      "colour": "#FF8C1A",
++      "colourSecondary": "#DB6E00",
++      "colourTertiary": "#CF8B17",
++      "extensions": ["shape_statement"]
++    });
++  }
++};
++
++/**
++ * Block to get a typed variable value (reporter)
++ */
++Blockly.Blocks['data_typedvariable_get'] = {
++  init: function() {
++    this.jsonInit({
++      "message0": "typed var %1",
++      "args0": [
++        {
++          "type": "field_input",
++          "name": "VAR",
++          "text": "myVar"
++        }
++      ],
++      "colour": "#FF8C1A",
++      "colourSecondary": "#DB6E00",
++      "colourTertiary": "#CF8B17",
++      "extensions": ["output_string"]
++    });
++  }
++};
++
++/**
++ * Block to set a typed variable value
++ */
++Blockly.Blocks['data_typedvariable_set'] = {
++  init: function() {
++    this.jsonInit({
++      "message0": "Set typed %1 to %2",
++      "args0": [
++        {
++          "type": "field_input",
++          "name": "VAR",
++          "text": "myVar"
++        },
++        {
++          "type": "input_value",
++          "name": "VALUE"
++        }
++      ],
++      "colour": "#FF8C1A",
++      "colourSecondary": "#DB6E00",
++      "colourTertiary": "#CF8B17",
++      "extensions": ["shape_statement"]
++    });
++  }
++};
 diff --git a/node_modules/openblock-blocks/generators/arduino.js b/node_modules/openblock-blocks/generators/arduino.js
 index 407b301..9c92d35 100644
 --- a/node_modules/openblock-blocks/generators/arduino.js
@@ -11,6 +117,64 @@ index 407b301..9c92d35 100644
    // include
    if (including.length != 0) {
      ret += including.join('\n') + "\n\n";
+diff --git a/node_modules/openblock-blocks/generators/arduino/data.js b/node_modules/openblock-blocks/generators/arduino/data.js
+index 4214561..5ecf88d 100644
+--- a/node_modules/openblock-blocks/generators/arduino/data.js
++++ b/node_modules/openblock-blocks/generators/arduino/data.js
+@@ -170,3 +170,53 @@ Blockly.Arduino['data_showlist'] = function() {
+ Blockly.Arduino['data_hidelist'] = function() {
+   return '';
+ };
++
++// ============================================================
++// Flowlence Typed Variable Generators
++// ============================================================
++
++/**
++ * Generator for declaring a typed variable
++ */
++Blockly.Arduino['data_typedvariable_declare'] = function(block) {
++  var type = block.getFieldValue('TYPE');
++  var varName = block.getFieldValue('VAR');
++  var value = Blockly.Arduino.valueToCode(block, 'VALUE',
++      Blockly.Arduino.ORDER_ASSIGNMENT) || (type === 'TEXT' ? '""' : '0');
++
++  // Clean variable name (remove spaces, special chars)
++  varName = varName.replace(/[^a-zA-Z0-9_]/g, '_');
++
++  // Determine Arduino type based on selection
++  var arduinoType = (type === 'TEXT') ? 'String' : 'float';
++
++  // Add variable declaration to definitions
++  Blockly.Arduino.definitions_['typedvar_' + varName] = arduinoType + ' ' + varName + ';';
++
++  // Return initialization code (goes in setup or where block is placed)
++  return varName + ' = ' + value + ';\n';
++};
++
++/**
++ * Generator for getting a typed variable value
++ */
++Blockly.Arduino['data_typedvariable_get'] = function(block) {
++  var varName = block.getFieldValue('VAR');
++  // Clean variable name
++  varName = varName.replace(/[^a-zA-Z0-9_]/g, '_');
++  return [varName, Blockly.Arduino.ORDER_ATOMIC];
++};
++
++/**
++ * Generator for setting a typed variable value
++ */
++Blockly.Arduino['data_typedvariable_set'] = function(block) {
++  var varName = block.getFieldValue('VAR');
++  var value = Blockly.Arduino.valueToCode(block, 'VALUE',
++      Blockly.Arduino.ORDER_ASSIGNMENT) || '0';
++
++  // Clean variable name
++  varName = varName.replace(/[^a-zA-Z0-9_]/g, '_');
++
++  return varName + ' = ' + value + ';\n';
++};
 diff --git a/node_modules/openblock-blocks/generators/python.js b/node_modules/openblock-blocks/generators/python.js
 index a120caf..9efa422 100644
 --- a/node_modules/openblock-blocks/generators/python.js
