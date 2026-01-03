@@ -5,6 +5,16 @@ import editorMessages from 'openblock-l10n/locales/editor-msgs';
 
 addLocaleData(localeData);
 
+// Override OpenBlock branding with Flowlence branding
+const flowlenceOverrides = {
+    'gui.gui.defaultProjectTitle': 'Flowlence Project'
+};
+
+// Apply overrides to all locales
+Object.keys(editorMessages).forEach(locale => {
+    Object.assign(editorMessages[locale], flowlenceOverrides);
+});
+
 const UPDATE_LOCALES = 'scratch-gui/locales/UPDATE_LOCALES';
 const SELECT_LOCALE = 'scratch-gui/locales/SELECT_LOCALE';
 
