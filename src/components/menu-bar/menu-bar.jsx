@@ -349,7 +349,7 @@ class MenuBar extends React.Component {
         }
     }
     handleClickOpenCommunity () {
-        window.open('https://community.openblock.cc');
+        window.open('https://community.flowlence.com');
     }
     handleClickOpenWiki () {
         window.open('https://wiki.flowlence.com');

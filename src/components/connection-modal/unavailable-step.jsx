@@ -28,8 +28,8 @@ const UnavailableStep = props => (
                     </div>
                     <div className={styles.helpStepText}>
                         <FormattedMessage
-                            defaultMessage="Make sure you have OpenBlock Link installed and running"
-                            description="Message for getting OpenBlock Link installed"
+                            defaultMessage="Make sure you have Flowlence Code installed and running"
+                            description="Message for getting Flowlence Code installed"
                             id="gui.connection.unavailable.installscratchlink"
                         />
                     </div>

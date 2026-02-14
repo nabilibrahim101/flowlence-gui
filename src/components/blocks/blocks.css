@@ -4,6 +4,16 @@
 
 .blocks {
     height: 100%;
+    position: relative;
+}
+
+.workspace-logo {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    opacity: 0.6;
+    pointer-events: none;
+    z-index: 50;
 }
 
 .drag-over:after {
