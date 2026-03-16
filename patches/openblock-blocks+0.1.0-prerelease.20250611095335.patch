@@ -1,5 +1,5 @@
 diff --git a/node_modules/openblock-blocks/arduino_compressed.js b/node_modules/openblock-blocks/arduino_compressed.js
-index f54decd..d7a2120 100644
+index f54decd..5e4102e 100644
 --- a/node_modules/openblock-blocks/arduino_compressed.js
 +++ b/node_modules/openblock-blocks/arduino_compressed.js
 @@ -12,7 +12,7 @@ Blockly.Arduino.ORDER_ATOMIC=0;Blockly.Arduino.ORDER_UNARY_POSTFIX=1;Blockly.Ard
@@ -16,7 +16,7 @@ index f54decd..d7a2120 100644
  Blockly.Arduino.data_itemnumoflist=function(a){var b=Blockly.Arduino.valueToCode(a,"ITEM",Blockly.Arduino.ORDER_ADDITIVE)||"0";return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".search("+b+") + 1",Blockly.Arduino.ORDER_UNARY_SIGN]};Blockly.Arduino.data_lengthoflist=function(a){return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".size()",Blockly.Arduino.ORDER_ATOMIC]};
  Blockly.Arduino.data_listcontainsitem=function(a){var b=Blockly.Arduino.valueToCode(a,"ITEM",Blockly.Arduino.ORDER_ADDITIVE)||"0";return[Blockly.Arduino.variableDB_.getName(a.getFieldValue("LIST"),Blockly.Variables.NAME_TYPE)+".has("+b+") != -1",Blockly.Arduino.ORDER_UNARY_SIGN]};Blockly.Arduino.data_showlist=function(){return""};Blockly.Arduino.data_hidelist=function(){return""};
 +// Flowlence Typed Variable Generators
-+Blockly.Arduino.data_typedvariable_declare=function(a){var b=a.getFieldValue("TYPE"),c=a.getFieldValue("VAR"),d=Blockly.Arduino.valueToCode(a,"VALUE",Blockly.Arduino.ORDER_ASSIGNMENT)||("TEXT"===b?'""':"0");c=c.replace(/[^a-zA-Z0-9_]/g,"_");var e="TEXT"===b?"String":"float";if("TEXT"===b&&/^\d+(\.\d+)?$/.test(d)){d="String("+d+")"}Blockly.Arduino.definitions_["typedvar_"+c]=e+" "+c+";";return c+" = "+d+";\n"};
++Blockly.Arduino.data_typedvariable_declare=function(a){var b=a.getFieldValue("TYPE"),c=a.getFieldValue("VAR"),d=Blockly.Arduino.valueToCode(a,"VALUE",Blockly.Arduino.ORDER_ASSIGNMENT)||("TEXT"===b?'""':"0");c=c.replace(/[^a-zA-Z0-9_]/g,"_");var e="TEXT"===b?"String":"float";if("TEXT"===b&&/^\d+(\.\d+)?$/.test(d)){d="String("+d+")"}if("NUMBER"===b){var m=d.match(/^"(.*)"$/);if(m){d=m[1]||"0"}if(!/^[\d.\-]/.test(d)&&d!=="0"){d="0"}}Blockly.Arduino.definitions_["typedvar_"+c]=e+" "+c+";";return c+" = "+d+";\n"};
 +Blockly.Arduino.data_typedvariable_get=function(a){var b=a.getFieldValue("VAR");b=b.replace(/[^a-zA-Z0-9_]/g,"_");return[b,Blockly.Arduino.ORDER_ATOMIC]};
 +Blockly.Arduino.data_typedvariable_set=function(a){var b=a.getFieldValue("VAR"),c=Blockly.Arduino.valueToCode(a,"VALUE",Blockly.Arduino.ORDER_ASSIGNMENT)||"0";b=b.replace(/[^a-zA-Z0-9_]/g,"_");return b+" = "+c+";\n"};
 diff --git a/node_modules/openblock-blocks/blocks_vertical/data.js b/node_modules/openblock-blocks/blocks_vertical/data.js
@@ -113,6 +113,31 @@ index a2e1df0..ffa2254 100644
 +    });
 +  }
 +};
+diff --git a/node_modules/openblock-blocks/core/css.js b/node_modules/openblock-blocks/core/css.js
+index a7c524b..1a3548f 100644
+--- a/node_modules/openblock-blocks/core/css.js
++++ b/node_modules/openblock-blocks/core/css.js
+@@ -1371,16 +1371,16 @@ Blockly.Css.CONTENT = [
+   '}',
+ 
+   '.scratchCategoryItemBubble {',
+-    'width: 1.25rem;',
+-    'height: 1.25rem;',
++    'width: 1.75rem;',
++    'height: 1.75rem;',
+     'border: 1px solid;',
+     'border-radius: 100%;',
+     'margin: 0 auto 0.125rem;',
+   '}',
+ 
+   '.scratchCategoryItemIcon {',
+-    'width: 1.25rem;',
+-    'height: 1.25rem;',
++    'width: 1.75rem;',
++    'height: 1.75rem;',
+     'margin: 0 auto 0.125rem;',
+     'background-size: 100%;',
+   '}',
 diff --git a/node_modules/openblock-blocks/generators/arduino.js b/node_modules/openblock-blocks/generators/arduino.js
 index 407b301..9c92d35 100644
 --- a/node_modules/openblock-blocks/generators/arduino.js
@@ -127,10 +152,10 @@ index 407b301..9c92d35 100644
    if (including.length != 0) {
      ret += including.join('\n') + "\n\n";
 diff --git a/node_modules/openblock-blocks/generators/arduino/data.js b/node_modules/openblock-blocks/generators/arduino/data.js
-index 4214561..df99712 100644
+index 4214561..35c64a5 100644
 --- a/node_modules/openblock-blocks/generators/arduino/data.js
 +++ b/node_modules/openblock-blocks/generators/arduino/data.js
-@@ -170,3 +170,61 @@ Blockly.Arduino['data_showlist'] = function() {
+@@ -170,3 +170,73 @@ Blockly.Arduino['data_showlist'] = function() {
  Blockly.Arduino['data_hidelist'] = function() {
    return '';
  };
@@ -159,6 +184,18 @@ index 4214561..df99712 100644
 +    // If value is a bare number (not already a string/expression), wrap in String()
 +    if (/^\d+(\.\d+)?$/.test(value)) {
 +      value = 'String(' + value + ')';
++    }
++  }
++
++  // For Number type, strip quotes if the value came from a text shadow block
++  if (type === 'NUMBER') {
++    var match = value.match(/^"(.*)"$/);
++    if (match) {
++      value = match[1] || '0';
++    }
++    // Ensure it's a valid number, fallback to 0
++    if (!/^[\d.\-]/.test(value) && value !== '0') {
++      value = '0';
 +    }
 +  }
 +

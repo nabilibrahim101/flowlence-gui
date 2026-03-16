@@ -716,16 +716,16 @@ const variableType = function () {
         secondaryColour="#DB6E00">
         <block type="data_typedvariable_declare">
             <value name="VALUE">
-                <shadow type="math_number">
-                    <field name="NUM">0</field>
+                <shadow type="text">
+                    <field name="TEXT"></field>
                 </shadow>
             </value>
         </block>
         <block type="data_typedvariable_get"></block>
         <block type="data_typedvariable_set">
             <value name="VALUE">
-                <shadow type="math_number">
-                    <field name="NUM">0</field>
+                <shadow type="text">
+                    <field name="TEXT"></field>
                 </shadow>
             </value>
         </block>
